@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>UFE Internships</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <style>
+
+        /* INTERNSHIP IMAGE GRID */
+
+        .internships-grid{
+            display:grid;
+            grid-template-columns:2fr 1fr;
+            gap:20px;
+            max-width:1200px;
+            margin:70px auto;
+            padding:0 20px;
+        }
+
+        .big-image img{
+            width:100%;
+            height:620px;
+            object-fit:cover;
+            border-radius:18px;
+            display:block;
+            box-shadow:0 10px 35px rgba(0,0,0,0.15);
+            transition:0.3s;
+        }
+
+        .big-image img:hover{
+            transform:translateY(-4px);
+        }
+
+        .small-images{
+            display:flex;
+            flex-direction:column;
+            gap:20px;
+        }
+
+        .small-images img{
+            width:100%;
+            height:300px;
+            object-fit:cover;
+            border-radius:18px;
+            display:block;
+            box-shadow:0 10px 35px rgba(0,0,0,0.15);
+            transition:0.3s;
+        }
+
+        .small-images img:hover{
+            transform:translateY(-4px);
+        }
+
+        /* MOBILE */
+
+        @media (max-width:768px){
+
+            .internships-grid{
+                grid-template-columns:1fr;
+            }
+
+            .big-image img{
+                height:320px;
+            }
+
+            .small-images img{
+                height:220px;
+            }
+
+        }
+/* NAVBAR */
+
+.navbar{
+    width:100%;
+    height:90px;
+    background:#0a2a6e;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 50px;
+    box-sizing:border-box;
+
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo-section{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.logo{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.navbar h2{
+    color:white;
+    margin:0;
+    font-size:24px;
+    font-weight:700;
+}
+
+.back-home-btn{
+    background:white;
+    color:#0a2a6e;
+    text-decoration:none;
+
+    padding:12px 22px;
+    border-radius:8px;
+
+    font-weight:700;
+    transition:0.3s;
+}
+
+.back-home-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+    .navbar{
+        height:auto;
+        padding:18px 20px;
+        flex-direction:column;
+        gap:14px;
+    }
+
+    .navbar h2{
+        font-size:18px;
+        text-align:center;
+    }
+
+    .logo{
+        width:48px;
+        height:48px;
+    }
+
+}
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo-section">
+
+            <img src="logo.jpeg" class="logo">
+
+            <h2>UFE Digital Marketing</h2>
+
+        </div>
+
+        <a href="index%20(3).html" class="back-home-btn navbar-back">
+            ← Back to Home
+        </a>
+
+    </nav>
+
+    <!-- HERO -->
+
+    <section class="intern-hero">
+
+        <div class="intern-overlay"></div>
+
+        <div class="intern-content">
+
+            <h1>Internships at UFE</h1>
+
+            <p>
+                At UFE, internships aren’t something you wait for —
+                they are part of your journey, giving you real-world
+                experience while studying digital marketing.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- IMAGE GRID -->
+
+    <div class="internships-grid">
+
+        <!-- LARGE IMAGE -->
+
+        <div class="big-image">
+
+            <img src="image1.jpeg"
+                 alt="Internship Experience">
+
+        </div>
+
+        <!-- SMALL IMAGES -->
+
+        <div class="small-images">
+
+            <img src="image2.jpeg"
+                 alt="Student Internship">
+
+            <img src="image3.jpeg"
+                 alt="Work Experience">
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

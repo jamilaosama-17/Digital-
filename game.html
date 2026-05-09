@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Digital Marketing Game</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial;
+    color: gold;
+    overflow: hidden;
+    background: black;
+  }
+
+  /* 🔥 DARK OVERLAY FOR BACKGROUNDS */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: -1;
+  }
+
+  .screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+
+  h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+
+  h2, p {
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  }
+
+  .characters {
+    display: flex;
+    gap: 60px;
+    margin-top: 30px;
+  }
+
+  .character {
+    text-align: center;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 20px;
+    transition: 0.3s;
+  }
+
+  .character:hover {
+    background: rgba(255, 215, 0, 0.05);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+  }
+
+  .character img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: 0.3s;
+    box-shadow: 0 0 20px rgba(255,215,0,0.2);
+  }
+
+  .character img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px gold;
+  }
+
+  .character p {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  /* GAME SCREEN */
+
+  .game {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .left {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .left img {
+    width: 280px;
+    border-radius: 20px;
+    animation: float 2s infinite ease-in-out;
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  }
+
+  @keyframes float {
+    0%,100% {transform: translateY(0);}
+    50% {transform: translateY(-10px);}
+  }
+
+  /* 🔥 GLASS PANEL */
+  .right {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    margin: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  }
+
+  .bubble {
+    background: rgba(255,215,0,0.1);
+    border-left: 4px solid gold;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+  }
+
+  button {
+    margin: 10px 0;
+    padding: 14px;
+    width: 260px;
+    border: none;
+    background: gold;
+    color: black;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    background: #ffd700;
+    box-shadow: 0 0 20px gold;
+  }
+
+  .result {
+    text-align: center;
+  }
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>emailjs.init("3P39gnUlLWofhIHP6");</script>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+
+let selectedCharacter = "";
+let score = 0;
+let current = 0;
+
+// ✅ BACKGROUNDS (PUT YOUR IMAGE NAMES HERE)
+const backgrounds = [
+  "backgrounds/bg1.jpeg",
+  "backgrounds/bg2.jpeg",
+  "backgrounds/bg3.jpeg",
+  "backgrounds/bg4.jpeg",
+  "backgrounds/bg5.jpeg",
+  "backgrounds/bg6.jpeg",
+  "backgrounds/bg7.jpeg",
+  "backgrounds/bg8.jpeg",
+  "backgrounds/bg9.jpeg",
+  "backgrounds/bg10.jpeg",
+  "backgrounds/bg11.jpeg",
+  "backgrounds/bg12.jpeg"
+];
+
+// QUESTIONS
+const questions = [
+
+{title:"LEVEL 1: SOCIAL MEDIA CRISIS",text:"Your brand’s post is getting negative comments.",manager:"What should we do?",answers:[
+{text:"Delete comments",score:2,feedback:"Deleting comments can harm trust."},
+{text:"Ignore",score:1,feedback:"Ignoring problems can make things worse."},
+{text:"Respond professionally",score:5,feedback:"Great! Professional responses build trust."},
+{text:"Argue",score:0,feedback:"Arguing damages the brand image."}
+]},
+
+{title:"LEVEL 2: CONTENT CREATION",text:"You need to promote a product.",manager:"We need something engaging.",answers:[
+{text:"Photo",score:2,feedback:"Good, but not very engaging."},
+{text:"Video",score:5,feedback:"Great! Videos perform better."},
+{text:"No post",score:0,feedback:"You need to post regularly."},
+{text:"Copy",score:-2,feedback:"Copying is not good."}
+]},
+
+{title:"LEVEL 3: ADS & BUDGET",text:"You have a limited budget for ads.",manager:"Where should we spend it?",answers:[
+{text:"Spend randomly",score:0,feedback:"Random spending wastes money."},
+{text:"Target specific audience ads",score:5,feedback:"Great! Targeting is key."},
+{text:"Save the money",score:1,feedback:"Saving won’t grow the brand."},
+{text:"Use influencers without research",score:2,feedback:"Influencers need research."}
+]},
+
+{title:"LEVEL 4: ANALYTICS",text:"Your campaign has high views but low engagement.",manager:"What should we improve?",answers:[
+{text:"Ignore the data",score:0,feedback:"Data should guide decisions."},
+{text:"Improve content",score:5,feedback:"Great! Always improve."},
+{text:"Stop posting",score:0,feedback:"Stopping is not a solution."},
+{text:"Do the same thing",score:1,feedback:"Repeating mistakes won’t help."}
+]},
+
+{title:"LEVEL 5: WEBSITE TASK",text:"You need to update a website.",manager:"What do you do?",answers:[
+{text:"Wait for someone",score:1,feedback:"Be independent."},
+{text:"Edit it yourself",score:5,feedback:"Great! Digital skills matter."},
+{text:"Delete the site",score:-3,feedback:"That’s a critical mistake."},
+{text:"Ignore it",score:0,feedback:"Not professional."}
+]},
+
+{title:"LEVEL 6: TECH PROBLEM",text:"A button is not working.",manager:"What’s your action?",answers:[
+{text:"Panic",score:0,feedback:"Stay calm."},
+{text:"Fix or ask developer",score:5,feedback:"Great problem solving."},
+{text:"Ignore it",score:0,feedback:"Not acceptable."},
+{text:"Delete it",score:-2,feedback:"That may break things."}
+]},
+
+{title:"LEVEL 7: DESIGN TASK",text:"You need to design a post quickly.",manager:"What do you use?",answers:[
+{text:"Paper",score:1,feedback:"Not practical."},
+{text:"Canva or tool",score:5,feedback:"Great! Tools save time."},
+{text:"Do nothing",score:0,feedback:"You must act."},
+{text:"Copy design",score:-2,feedback:"Be original."}
+]},
+
+{title:"LEVEL 8: HTML BASICS",text:"You are working on a website.",manager:"What is HTML used for?",answers:[
+{text:"Designing the website",score:1,feedback:"That’s CSS."},
+{text:"Structuring content",score:5,feedback:"Correct! HTML builds structure."},
+{text:"Making it fast",score:0,feedback:"Handled differently."},
+{text:"Running ads",score:0,feedback:"Not related."}
+]},
+
+{title:"LEVEL 9: CSS BASICS",text:"You want to change how your website looks.",manager:"What controls design?",answers:[
+{text:"HTML",score:0,feedback:"HTML is structure."},
+{text:"CSS",score:5,feedback:"Correct! CSS handles design."},
+{text:"JavaScript",score:0,feedback:"That’s interactivity."},
+{text:"Excel",score:0,feedback:"Not relevant."}
+]},
+
+{title:"LEVEL 10: JAVASCRIPT",text:"You want to make your website interactive.",manager:"What should you use?",answers:[
+{text:"HTML",score:0,feedback:"Structure only."},
+{text:"CSS",score:0,feedback:"Design only."},
+{text:"JavaScript",score:5,feedback:"Correct! JS adds interactivity."},
+{text:"Word",score:0,feedback:"Not relevant."}
+]},
+
+{title:"LEVEL 11: PROBLEM SOLVING",text:"A page is not loading.",manager:"What do you do first?",answers:[
+{text:"Panic",score:0,feedback:"Stay calm."},
+{text:"Refresh/check internet",score:5,feedback:"Correct first step!"},
+{text:"Delete site",score:-3,feedback:"Major mistake."},
+{text:"Ignore",score:0,feedback:"Not professional."}
+]},
+
+{title:"LEVEL 12: DIGITAL TOOLS",text:"You need to manage a website.",manager:"Which tool do you use?",answers:[
+{text:"Word",score:0,feedback:"Documents only."},
+{text:"Excel",score:0,feedback:"Data only."},
+{text:"WordPress",score:5,feedback:"Correct! Widely used."},
+{text:"Calculator",score:0,feedback:"Not relevant."}
+]}
+
+];
+
+// START
+showForum();
+  
+function showForum() {
+  document.body.style.background = "#0a2a6e";
+
+  document.getElementById("app").innerHTML = `
+    <div class="screen result" style="max-width:480px;margin:0 auto;padding:40px 20px;">
+      <h1 style="color:white;font-size:clamp(22px,4vw,32px);margin-bottom:8px;">
+        Start Your Digital Marketing Journey
+      </h1>
+
+      <p style="color:rgba(255,255,255,0.7);font-size:16px;margin-bottom:32px;">
+        Register first, then begin the challenge.
+      </p>
+
+      <div style="background:white;border-radius:14px;padding:32px 28px;text-align:left;">
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#0a2a6e;font-weight:700;margin:0 0 8px;">
+          Student Registration
+        </p>
+
+        <h2 style="font-size:20px;font-weight:800;color:#111;margin:0 0 24px;">
+          Apply Now
+        </h2>
+
+        <input id="reg-name" type="text" placeholder="Full Name" required style="width:100%;padding:12px;margin-bottom:14px;background:#f0f0f0;border:1px solid #ccc;color:#111;border-radius:6px;box-sizing:border-box;font-family:Arial,sans-serif;font-size:14px;">
+
+        <input id="reg-email" type="email" placeholder="Email Address" required style="width:100%;padding:12px;margin-bottom:14px;background:#f0f0f0;border:1px solid #ccc;color:#111;border-radius:6px;box-sizing:border-box;font-family:Arial,sans-serif;font-size:14px;">
+
+        <input id="reg-phone" type="tel" placeholder="Phone Number" required style="width:100%;padding:12px;margin-bottom:14px;background:#f0f0f0;border:1px solid #ccc;color:#111;border-radius:6px;box-sizing:border-box;font-family:Arial,sans-serif;font-size:14px;">
+
+        <select id="reg-certificate" required style="width:100%;padding:12px;margin-bottom:20px;background:#f0f0f0;border:1px solid #ccc;color:#111;border-radius:6px;box-sizing:border-box;font-family:Arial,sans-serif;font-size:14px;">
+          <option value="" disabled selected>Select Your Certificate</option>
+          <option>American Diploma</option>
+          <option>International Baccalaureate (IB)</option>
+          <option>International General Certificate Of Secondary Education (IGCSE)</option>
+          <option>Thanawaya Amma</option>
+          <option>French Baccalauréat (BAC)</option>
+          <option>Year 1</option>
+        </select>
+
+        <button onclick="startGameAfterRegister()" style="width:100%;padding:14px;background:#0a2a6e;color:white;border:none;border-radius:6px;font-size:15px;font-weight:700;cursor:pointer;">
+          Start Game
+        </button>
+
+        <p id="reg-status" style="text-align:center;margin-top:12px;font-size:13px;display:none;"></p>
+      </div>
+    </div>
+  `;
+}
+
+function startGameAfterRegister() {
+  var name = document.getElementById('reg-name').value;
+  var email = document.getElementById('reg-email').value;
+  var phone = document.getElementById('reg-phone').value;
+  var certificate = document.getElementById('reg-certificate').value;
+  var status = document.getElementById('reg-status');
+
+  if (!name || !email || !phone || !certificate) {
+    status.style.display = 'block';
+    status.style.color = '#e53935';
+    status.textContent = 'Please fill in all fields.';
+    return;
+  }
+
+  emailjs.send('service_7b4btsm', 'template_spgnxkd', {
+    name,
+    email,
+    phone,
+    certificate
+  });
+
+  showCharacterSelection();
+}
+// CHARACTER SCREEN
+
+function showCharacterSelection() {
+  document.body.style.background = "black";
+
+  document.getElementById("app").innerHTML = `
+    <div class="screen">
+      <h1>Choose Your Character</h1>
+
+      <div class="characters">
+        <div class="character" onclick="selectCharacter('girl')">
+          <img src="asian-girl.jpg">
+          <p>Creative Girl</p>
+        </div>
+
+        <div class="character" onclick="selectCharacter('boy')">
+          <img src="Guy.jpeg">
+          <p>Strategic Boy</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// SELECT CHARACTER
+function selectCharacter(type) {
+  selectedCharacter = type;
+  loadQuestion();
+}
+
+// LOAD QUESTION
+function loadQuestion() {
+  const q = questions[current];
+
+  // ✅ BACKGROUND CHANGE
+  document.body.style.background = `url('${backgrounds[current]}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+
+  const characterImg = selectedCharacter === "girl"
+    ? "asian-girl.jpg"
+    : "Guy.jpeg";
+
+  let answersHTML = "";
+  q.answers.forEach(a => {
+    answersHTML += `<button onclick="answer(${a.score}, '${a.feedback}')">${a.text}</button>`;
+  });
+
+  document.getElementById("app").innerHTML = `
+    <div class="game">
+      <div class="left">
+        <img src="${characterImg}">
+      </div>
+
+      <div class="right">
+        <h2>${q.title}</h2>
+
+        <div class="bubble">
+          <b>Manager:</b> ${q.manager}
+        </div>
+
+        <p>${q.text}</p>
+
+        ${answersHTML}
+      </div>
+    </div>
+  `;
+}
+
+// ANSWER
+function answer(points, feedback) {
+  score += points;
+
+  document.getElementById("app").innerHTML = `
+    <div class="screen result">
+      <h2>${feedback}</h2>
+      <p>Score: ${score}</p>
+      <button onclick="nextQuestion()">Next</button>
+    </div>
+  `;
+}
+
+// NEXT
+function nextQuestion() {
+  current++;
+  if (current < questions.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+// RESULT
+function showResult() {
+  let result = "";
+
+  if (score >= 45) {
+    result = "🎉 You are ready for Digital Marketing!";
+  } else if (score >= 25) {
+    result = "👍 You have potential!";
+  } else {
+    result = "⚠️ You need improvement.";
+  }
+document.getElementById("app").innerHTML = `
+  <div class="screen result">
+    <h1>${result}</h1>
+    <p>Final Score: ${score}</p>
+
+    <button onclick="location.reload()">
+      Play Again
+    </button>
+  </div>
+`;
+}
+
+function submitGameReg() {
+  var name = document.getElementById('reg-name').value;
+  var email = document.getElementById('reg-email').value;
+  var phone = document.getElementById('reg-phone').value;
+  var certificate = document.getElementById('reg-certificate').value;
+  var btn = document.getElementById('reg-btn');
+  var status = document.getElementById('reg-status');
+
+  if (!name || !email || !phone || !certificate) {
+    status.style.display = 'block';
+    status.style.color = '#e53935';
+    status.textContent = 'Please fill in all fields.';
+    return;
+  }
+
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  status.style.display = 'block';
+  status.style.color = '#555';
+  status.textContent = 'Submitting your application...';
+
+  emailjs.send('service_7b4btsm', 'template_spgnxkd', { name, email, phone, certificate })
+    .then(function() {
+      fetch('https://ufe-sms-6408.twil.io/send-sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'to=' + encodeURIComponent(phone) + '&name=' + encodeURIComponent(name)
+      }).catch(function(err) { console.log('SMS error:', err); });
+
+      btn.textContent = '✓ Application Submitted!';
+      btn.style.background = '#4CAF50';
+      status.style.color = '#4CAF50';
+      status.textContent = '✓ Confirmation email & SMS sent!';
+    }, function(error) {
+      btn.textContent = 'Submit Application';
+      btn.disabled = false;
+      status.style.color = '#e53935';
+      status.textContent = '✗ Something went wrong. Please try again.';
+      console.error('EmailJS error:', JSON.stringify(error));
+    });
+}
+
+</script>
+
+</body>
+</html>
