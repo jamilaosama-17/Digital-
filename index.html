@@ -751,7 +751,7 @@ a[href="staff.html"]:hover{
             Reach out to us and we’ll help you get started.
         </p>
 
-        <a href="#apply" style="
+        <a href="#contact" style="
             display:inline-block;
             background:#0a2a6e;
             color:white;
@@ -1204,26 +1204,7 @@ z-index:9999;
 
 
 
-// ENTER KEY SUPPORT
 
-document.addEventListener("DOMContentLoaded", function() {
-
-    let input = document.getElementById("chat-input");
-
-    if(input){
-
-        input.addEventListener("keypress", function(event){
-
-            if(event.key === "Enter"){
-                event.preventDefault();
-                sendMessage();
-            }
-
-        });
-
-    }
-
-});
 <div id="google_translate_element" style="display:none;"></div>
 
 <script>
@@ -1475,6 +1456,26 @@ function sendMessage() {
 
     input.value = "";
 }
+// ENTER KEY SUPPORT
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    let input = document.getElementById("chat-input");
+
+    if(input){
+
+        input.addEventListener("keypress", function(event){
+
+            if(event.key === "Enter"){
+                event.preventDefault();
+                sendMessage();
+            }
+
+        });
+
+    }
+
+});
     </script>
 
 </body>
