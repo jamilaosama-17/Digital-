@@ -538,7 +538,6 @@ a[href="staff.html"]:hover{
             <li>
                 <a href="#">Home <span class="arrow">&#9660;</span></a>
                 <div class="dropdown">
-                    <a href="#">Hero</a>
                     <a href="#about">About</a>
                
                 </div>
@@ -546,6 +545,10 @@ a[href="staff.html"]:hover{
             <li>
                 <a href="#strategy">Educational Sequence <span class="arrow">&#9660;</span></a>
                 <div class="dropdown">
+                    <a href="curriculum.html#year-1">Year 1</a>
+                    <a href="curriculum.html#year-2">Year 2</a>
+                    <a href="curriculum.html#year-3">Year 3</a>
+        
                 </div>
             </li>
             <li>
@@ -606,7 +609,7 @@ a[href="staff.html"]:hover{
     <h1 style="font-size:60px; margin:10px 0;">From Scroll<br>to Strategy.</h1>
     <p>You scroll every day. But do you know what's behind it?</p>
 
-    <a href="#registration" style="
+    <a href="doctors.html" style="
       margin-top:20px;
       padding:12px 24px;
       background:#ff2727;
@@ -717,20 +720,6 @@ a[href="staff.html"]:hover{
 
 <section style="background:#f5f5f7; padding:90px 20px; text-align:center;">
 
-    <a href="doctors.html" style="
-        display:inline-block;
-        background:black;
-        color:white;
-        text-decoration:none;
-        padding:12px 28px;
-        border-radius:6px;
-        font-size:13px;
-        font-weight:700;
-        margin-bottom:70px;
-        transition:0.3s;
-    ">
-        Meet our Academic Staff
-    </a>
 
     <div style="margin-top:20px;">
 
@@ -1365,10 +1354,34 @@ box-shadow:0 10px 30px rgba(0,0,0,0.35);
 function toggleChat() {
 
     let chat = document.getElementById("ai-chat-window");
+    let messages = document.getElementById("ai-chat-messages");
 
     if(chat.style.display === "none") {
+
         chat.style.display = "block";
+
+        // FIRST BOT MESSAGE
+        if(messages.innerHTML.trim() === "") {
+
+            messages.innerHTML += `
+                <div style="
+                    background:#f1f1f1;
+                    color:#111;
+                    padding:10px 14px;
+                    border-radius:12px;
+                    margin-bottom:10px;
+                    max-width:80%;
+                    font-size:14px;
+                    line-height:1.5;
+                ">
+                    👋 Hello! I'm the UFE Assistant.<br>
+                    Ask me about admissions, internships, careers, subjects, or the Digital Marketing program.
+                </div>
+            `;
+        }
+
     } else {
+
         chat.style.display = "none";
     }
 }
@@ -1407,29 +1420,69 @@ function sendMessage() {
 
     // ANSWERS
 
-    if(msg.includes("fees") || msg.includes("tuition")) {
-        reply = "Please contact the university directly for updated tuition fees.";
-    }
+   if(msg.includes("fees") || msg.includes("tuition")) {
+    reply = "Please contact the university directly for updated tuition fees.";
+}
 
-    else if(msg.includes("location") || msg.includes("where")) {
-        reply = "The French University in Egypt is located in Cairo.";
-    }
+else if(msg.includes("location") || msg.includes("where")) {
+    reply = "The French University in Egypt is located in Cairo.";
+}
 
-    else if(msg.includes("digital marketing")) {
-        reply = "Digital Marketing includes branding, SEO, social media, advertising, and analytics.";
-    }
+else if(msg.includes("digital marketing")) {
+    reply = "Digital Marketing includes branding, SEO, social media, advertising, and analytics.";
+}
 
-    else if(msg.includes("duration")) {
-        reply = "The program duration is usually 3 years.";
-    }
+else if(msg.includes("duration") || msg.includes("how long")) {
+    reply = "The Digital Marketing program at UFE is a 3-year bachelor’s degree.";
+}
 
-    else if(msg.includes("apply")) {
-        reply = "You can apply using the Contact Us form.";
-    }
+else if(msg.includes("internship") || msg.includes("internships")) {
+    reply = "Yes. UFE offers internship opportunities and industry collaborations to help students gain real-world experience.";
+}
 
-    else if(msg.includes("hello") || msg.includes("hi")) {
-        reply = "Hello! How can I help you today?";
-    }
+else if(msg.includes("career") || msg.includes("jobs")) {
+    reply = "Graduates can work in digital marketing, branding, social media management, SEO, advertising, content creation, and analytics.";
+}
+
+else if(msg.includes("recognized") || msg.includes("international")) {
+    reply = "UFE follows international academic standards and provides globally relevant education.";
+}
+
+else if(msg.includes("year 1") || msg.includes("subjects")) {
+    reply = "Year 1 includes marketing fundamentals, branding, communication, consumer behavior, and digital tools.";
+}
+
+else if(msg.includes("american diploma") || msg.includes("igcse")) {
+    reply = "Yes. UFE accepts American Diploma, IGCSE, and other educational systems based on admission requirements.";
+}
+
+else if(msg.includes("skills")) {
+    reply = "Students learn branding, social media strategy, analytics, communication, campaign management, and content creation.";
+}
+
+else if(msg.includes("web development") || msg.includes("design")) {
+    reply = "Yes. The program includes web design, UI/UX concepts, and website management.";
+}
+
+else if(msg.includes("contact") || msg.includes("admissions")) {
+    reply = "You can contact UFE admissions through the official website, email, or phone number in the contact section.";
+}
+
+else if(msg.includes("different") || msg.includes("why ufe")) {
+    reply = "UFE combines academic learning with practical projects, modern digital tools, and industry-focused education.";
+}
+
+else if(msg.includes("apply")) {
+    reply = "You can apply using the Apply Us form on the website.";
+}
+
+else if(msg.includes("hello") || msg.includes("hi")) {
+    reply = "Hello! How can I help you today?";
+}
+
+else {
+    reply = "Sorry, I couldn't understand your question. Please try asking about admissions, internships, careers, or the Digital Marketing program.";
+}
 
     // BOT REPLY
 
