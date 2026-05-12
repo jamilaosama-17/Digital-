@@ -161,7 +161,7 @@
   }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script>emailjs.init("3P39gnUlLWofhIHP6");</script>
+  <script>emailjs.init("B39ujEYUXntzR5xb9");</script>
 </head>
 <body>
 
@@ -316,7 +316,6 @@ function showForum() {
           <option>International General Certificate Of Secondary Education (IGCSE)</option>
           <option>Thanawaya Amma</option>
           <option>French Baccalauréat (BAC)</option>
-          <option>Year 1</option>
         </select>
 
         <button onclick="startGameAfterRegister()" style="width:100%;padding:14px;background:#0a2a6e;color:white;border:none;border-radius:6px;font-size:15px;font-weight:700;cursor:pointer;">
@@ -328,6 +327,8 @@ function showForum() {
     </div>
   `;
 }
+
+let playerData = {};
 
 function startGameAfterRegister() {
   var name = document.getElementById('reg-name').value;
@@ -343,12 +344,13 @@ function startGameAfterRegister() {
     return;
   }
 
-  emailjs.send('service_7b4btsm', 'template_spgnxkd', {
+  // SAVE PLAYER DATA
+  playerData = {
     name,
     email,
     phone,
     certificate
-  });
+  };
 
   showCharacterSelection();
 }
@@ -456,59 +458,35 @@ function showResult() {
   } else {
     result = "⚠️ You need improvement.";
   }
-document.getElementById("app").innerHTML = `
-  <div class="screen result">
-    <h1>${result}</h1>
-    <p>Final Score: ${score}</p>
 
-    <button onclick="location.reload()">
-      Play Again
-    </button>
-  </div>
-`;
+  // SEND EMAIL AFTER GAME FINISHES
+  emailjs.send('service_dp3xnm2', 'template_be8bzkn', {
+    name: playerData.name,
+    email: playerData.email,
+    phone: playerData.phone,
+    certificate: playerData.certificate,
+    character: selectedCharacter,
+    final_score: score,
+    final_result: result
+  });
+
+  document.getElementById("app").innerHTML = `
+    <div class="screen result">
+      <h1>${result}</h1>
+      <p>Final Score: ${score}</p>
+
+<button onclick="location.reload()">
+  Play Again
+</button>
+
+<button onclick="window.location.href='index.html'">
+  Back To Home
+</button>
+    </div>
+  `;
 }
 
-function submitGameReg() {
-  var name = document.getElementById('reg-name').value;
-  var email = document.getElementById('reg-email').value;
-  var phone = document.getElementById('reg-phone').value;
-  var certificate = document.getElementById('reg-certificate').value;
-  var btn = document.getElementById('reg-btn');
-  var status = document.getElementById('reg-status');
 
-  if (!name || !email || !phone || !certificate) {
-    status.style.display = 'block';
-    status.style.color = '#e53935';
-    status.textContent = 'Please fill in all fields.';
-    return;
-  }
-
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-  status.style.display = 'block';
-  status.style.color = '#555';
-  status.textContent = 'Submitting your application...';
-
-  emailjs.send('service_7b4btsm', 'template_spgnxkd', { name, email, phone, certificate })
-    .then(function() {
-      fetch('https://ufe-sms-6408.twil.io/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'to=' + encodeURIComponent(phone) + '&name=' + encodeURIComponent(name)
-      }).catch(function(err) { console.log('SMS error:', err); });
-
-      btn.textContent = '✓ Application Submitted!';
-      btn.style.background = '#4CAF50';
-      status.style.color = '#4CAF50';
-      status.textContent = '✓ Confirmation email & SMS sent!';
-    }, function(error) {
-      btn.textContent = 'Submit Application';
-      btn.disabled = false;
-      status.style.color = '#e53935';
-      status.textContent = '✗ Something went wrong. Please try again.';
-      console.error('EmailJS error:', JSON.stringify(error));
-    });
-}
 
 </script>
 
